@@ -13,7 +13,7 @@ import {
 const menuItems = [
   {
     label: 'Хянах самбар',
-    path: '/a',
+    path: '/dashboard',
     icon: <HomeOutlined />,
   },
   {
@@ -28,12 +28,12 @@ const menuItems = [
   },
   {
     label: 'Шалгах хуудас',
-    path: '/a',
+    path: '/checklist',
     icon: <FileTextOutlined />,
   },
   {
     label: 'Тохиргоо',
-    path: '/a',
+    path: '/settings',
     icon: <SettingOutlined />,
   },
 ];
@@ -58,18 +58,18 @@ export function Sidebar() {
             className={cn(
               'gap-4 flex cursor-pointer items-center gap-6xl px-3xl py-3xl transition-all duration-200',
               pathname === item.path
-                ? 'text-lg bg-[#8a5a2d] font-bold text-white'
+                ? 'text-lg text-white bg-[#8a5a2d] font-bold'
                 : 'text-md font-semibold hover:bg-[#f5d8bc]',
             )}
           >
             {item.icon}
-            <span className="w-[150px] text-text-lg">{item.label}</span>
+            <span className="text-text-lg w-[150px]">{item.label}</span>
           </div>
         ))}
       </div>
 
       <div className="gap-3 px-6 py-4 flex items-center">
-        <div className="w-8 h-8 border rounded-full border-[#5c4033]" />
+        <div className="w-8 h-8 rounded-full border border-[#5c4033]" />
         <div className="font-semibold text-[#5c4033]">Admin</div>
       </div>
     </div>

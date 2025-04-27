@@ -2,7 +2,7 @@ export type Action =
   // | 'Manage'
   'create' | 'read' | 'update' | 'delete' | 'status';
 
-export type Subject = 'Auth' | 'Home' | 'Register';
+export type Subject = 'Auth' | 'Home' | 'Register' | 'Checklist';
 
 interface PathArg {
   id?: string | null;
@@ -64,6 +64,18 @@ export const Routes: RouteType = {
       subject: 'Register',
       fallback: '/',
       shouldBeAuthenticated: false,
+    },
+  },
+  Checklist: {
+    // ✨ Shineeer nemlee
+    key: '/checklist',
+    Index: {
+      title: 'Шалгах хуудас',
+      route: '/checklist',
+      action: 'read',
+      subject: 'Checklist',
+      fallback: '/',
+      shouldBeAuthenticated: true,
     },
   },
 };
