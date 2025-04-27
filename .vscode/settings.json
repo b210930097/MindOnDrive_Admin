@@ -1,0 +1,23 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "cSpell.enableFiletypes": ["!typescriptreact"],
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+    ["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ],
+  "cloudcode.duetAI.inlineSuggestions.enableAuto": true,
+  "cSpell.words": [
+    "antd",
+    "casl",
+    "Codegen",
+    "cssinjs",
+    "nextauth",
+    "tailwindcss"
+  ],
+  "search.useGlobalIgnoreFiles": false
+}
