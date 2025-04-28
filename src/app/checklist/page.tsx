@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button, Tabs } from '@/components';
 import { Input, message, Modal } from 'antd';
 import { useSession } from 'next-auth/react';
@@ -27,8 +27,9 @@ export default function ChecklistPage() {
   const [inputValue, setInputValue] = useState('');
   const [editId, setEditId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [correctAnswer, setCorrectAnswer] = useState<boolean | null>(null);
 
-  const fetchChecklist = async () => {
+  const fetchChecklist = useCallback(async () => {
     try {
       const response = await fetch(
         `/api/checklist/read?email=${session?.user.email}`,
@@ -51,20 +52,25 @@ export default function ChecklistPage() {
       console.error(error);
       message.error('Алдаа гарлаа.');
     }
-  };
+  }, [session?.user?.email]);
 
   useEffect(() => {
-    fetchChecklist();
-  }, []);
+    if (session?.user?.email) {
+      fetchChecklist();
+    }
+  }, [session?.user?.email, fetchChecklist]);
 
   const handleAddOrUpdate = async () => {
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || correctAnswer === null) {
+      message.error('Асуулт болон хариултын утгаа бөглөнө үү!');
+      return;
+    }
 
     try {
       setLoading(true);
 
       if (editId) {
-        // ✨ Update хийх
+        // ✨ Update хийх үед
         const response = await fetch(`/api/checklist/update?id=${editId}`, {
           method: 'PATCH',
           headers: {
@@ -72,6 +78,9 @@ export default function ChecklistPage() {
           },
           body: JSON.stringify({
             question: inputValue,
+            ...(currentTab === TabType.DRIVER
+              ? { isCorrect: correctAnswer }
+              : { isFix: correctAnswer }),
           }),
         });
         const data = await response.json();
@@ -82,7 +91,7 @@ export default function ChecklistPage() {
           message.error(data.message || 'Алдаа гарлаа.');
         }
       } else {
-        // ✨ Шинээр нэмэх
+        // ✨ Шинээр нэмэх үед
         const response = await fetch('/api/checklist/create', {
           method: 'POST',
           headers: {
@@ -92,6 +101,9 @@ export default function ChecklistPage() {
             type: currentTab,
             question: inputValue,
             createdBy: session?.user?.email,
+            ...(currentTab === TabType.DRIVER
+              ? { isCorrect: correctAnswer }
+              : { isFix: correctAnswer }),
           }),
         });
         const data = await response.json();
@@ -105,6 +117,7 @@ export default function ChecklistPage() {
 
       setInputValue('');
       setEditId(null);
+      setCorrectAnswer(null);
       fetchChecklist();
     } catch (error) {
       console.error(error);
@@ -179,22 +192,19 @@ export default function ChecklistPage() {
         </h2>
 
         <ul className="gap-4 flex flex-col">
-          {(currentTab === TabType.DRIVER
-            ? driverQuestions
-            : vehicleQuestions
-          ).map((q, idx) => (
+          {currentQuestions.map((item, idx) => (
             <li
               key={idx}
-              className="p-4 group flex items-center justify-between rounded-md border transition hover:shadow-md"
+              className="p-4 border group flex items-center justify-between rounded-md transition hover:shadow-md"
             >
-              <span className="text-base font-medium">{q.question}</span>
+              <span className="text-base font-medium">{item.question}</span>
 
               <div className="gap-2 hidden group-hover:flex">
                 <Button
                   type="primary"
                   onClick={() => {
-                    setInputValue(q.question);
-                    setEditId(q.id);
+                    setInputValue(item.question);
+                    setEditId(item.id);
                   }}
                   leftIcon={<EditOutlined />}
                 >
@@ -203,7 +213,7 @@ export default function ChecklistPage() {
                 <Button
                   type="primary"
                   destructive
-                  onClick={() => handleDelete(q.id)}
+                  onClick={() => handleDelete(item.id)}
                   leftIcon={<DeleteOutlined />}
                 >
                   Устгах
@@ -224,8 +234,54 @@ export default function ChecklistPage() {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           rows={4}
-          className="p-4 rounded-md border"
+          className="p-4 border rounded-md"
         />
+
+        {currentTab === TabType.DRIVER ? (
+          <div className="gap-4 flex">
+            <span>Зөв хариулт:</span>
+            <label className="gap-1 flex items-center">
+              <input
+                type="radio"
+                value="true"
+                checked={correctAnswer === true}
+                onChange={() => setCorrectAnswer(true)}
+              />
+              Тийм
+            </label>
+            <label className="gap-1 flex items-center">
+              <input
+                type="radio"
+                value="false"
+                checked={correctAnswer === false}
+                onChange={() => setCorrectAnswer(false)}
+              />
+              Үгүй
+            </label>
+          </div>
+        ) : (
+          <div className="gap-4 flex">
+            <span>Анхан байдал:</span>
+            <label className="gap-1 flex items-center">
+              <input
+                type="radio"
+                value="false"
+                checked={correctAnswer === false}
+                onChange={() => setCorrectAnswer(false)}
+              />
+              Хэвийн
+            </label>
+            <label className="gap-1 flex items-center">
+              <input
+                type="radio"
+                value="true"
+                checked={correctAnswer === true}
+                onChange={() => setCorrectAnswer(true)}
+              />
+              Засах шаардлагатай
+            </label>
+          </div>
+        )}
 
         <Button
           onClick={handleAddOrUpdate}

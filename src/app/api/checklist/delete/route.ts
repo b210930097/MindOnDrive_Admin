@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 import { db } from '@/lib/firebase/firebaseAdminDb';
 
 export async function DELETE(req: NextRequest) {
@@ -14,11 +15,13 @@ export async function DELETE(req: NextRequest) {
   try {
     await db.collection('checklists').doc(id).delete();
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-    return NextResponse.json(
-      { success: false, message: error.message },
-      { status: 500 },
-    );
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { success: false, message: error.message },
+        { status: 500 },
+      );
+    }
   }
 }

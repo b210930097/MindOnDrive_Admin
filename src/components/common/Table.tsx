@@ -2,13 +2,13 @@
 
 import { Table as AntTable } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { Driver, BranchAdmin } from '@/types';
 import { fetchBranchAdmins, fetchDriversByBranch } from '@/services/fetch-user';
 import { useSession } from 'next-auth/react';
-
+import { formatDate } from '@/utils/dayjs';
 interface TableProps {
-  reloadFlag: boolean;
+  reloadFlag?: boolean;
 }
 
 export function Table({ reloadFlag }: TableProps) {
@@ -18,7 +18,7 @@ export function Table({ reloadFlag }: TableProps) {
 
   const isSuperAdmin = session?.user?.email === 'super@admin.com';
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
       if (isSuperAdmin) {
@@ -33,13 +33,13 @@ export function Table({ reloadFlag }: TableProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [isSuperAdmin, session?.user?.email]);
 
   useEffect(() => {
     if (session) {
       loadData();
     }
-  }, [session, reloadFlag]);
+  }, [session, reloadFlag, loadData]);
 
   const columns: ColumnsType<Driver | BranchAdmin> = [
     {
@@ -61,10 +61,7 @@ export function Table({ reloadFlag }: TableProps) {
       title: 'Үүссэн огноо',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: (timestamp) =>
-        timestamp
-          ? new Date((timestamp?.seconds ?? 0) * 1000).toLocaleDateString()
-          : '-',
+      render: (timestamp) => (timestamp ? formatDate(timestamp) : '-'),
     },
   ];
 

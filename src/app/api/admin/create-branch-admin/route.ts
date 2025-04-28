@@ -2,6 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { adminAuth } from '@/lib/firebase/firebaseAdmin';
 import { db } from '@/lib/firebase/firebaseAdminDb';
+import { formatDate } from '@/utils/dayjs';
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,13 +16,16 @@ export async function POST(req: NextRequest) {
       disabled: false,
     });
 
-    await db.collection('branches').doc(userRecord.uid).set({
-      email,
-      phone,
-      role: 'branchAdmin',
-      createdAt: new Date(),
-      createdBy,
-    });
+    await db
+      .collection('branches')
+      .doc(userRecord.uid)
+      .set({
+        email,
+        phone,
+        role: 'branchAdmin',
+        createdAt: formatDate(new Date()),
+        createdBy,
+      });
 
     return NextResponse.json({ success: true });
   } catch (error: unknown) {
