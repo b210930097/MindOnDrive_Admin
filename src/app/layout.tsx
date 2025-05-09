@@ -35,15 +35,17 @@ export default function RootLayout({
             <AntConfigProvider>
               <DynamicStyledComponentsProvider>
                 {!isPublicPage ? (
-                  <div className="flex min-h-screen bg-[#fef6ef]">
+                  <div className="flex bg-secondary">
                     <Sidebar />
                     <div className="flex flex-1 flex-col">
                       <Navbar />
-                      {children}
+                      <div className="flex size-full flex-col p-3xl">
+                        {children}
+                      </div>
                     </div>
                   </div>
                 ) : (
-                  <div className="min-h-screen bg-[#fef6ef]">{children}</div>
+                  <div className="bg-secondary">{children}</div>
                 )}
               </DynamicStyledComponentsProvider>
             </AntConfigProvider>

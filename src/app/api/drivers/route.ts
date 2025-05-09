@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/firebase/firebaseAdminDb';
-import type { DocumentData } from 'firebase-admin/firestore';
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -11,27 +10,29 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'No permission' }, { status: 401 });
   }
 
-  if (role === 'superadmin') {
-    const snapshot = await db.collection('branches').get();
-    const branches = snapshot.docs.map((doc: DocumentData) => ({
+  if (role === 'superAdmin') {
+    const snapshot = await db
+      .collection('users')
+      .where('createdBy', '==', email)
+      .get();
+
+    const data = snapshot.docs.map((doc: FirebaseFirestore.DocumentData) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    return NextResponse.json({ branches });
-  } else if (role === 'branchAdmin') {
-    const driverSnapshot = await db
-      .collection('drivers')
+    return NextResponse.json({ data });
+  } else if (role === 'Admin') {
+    const snapshot = await db
+      .collection('users')
       .where('createdBy', '==', email)
       .get();
 
-    const drivers = driverSnapshot.docs.map(
-      (doc: FirebaseFirestore.DocumentData) => ({
-        id: doc.id,
-        ...doc.data(),
-      }),
-    );
+    const data = snapshot.docs.map((doc: FirebaseFirestore.DocumentData) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
 
-    return NextResponse.json({ drivers });
+    return NextResponse.json({ data });
   }
 }

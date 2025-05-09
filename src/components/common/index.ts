@@ -5,3 +5,8 @@ export * from './Tabs';
 export * from './Table';
 export * from './CreateAdminModal';
 export * from './CreateDriverModal';
+export * from './ProfileCard';
+export * from './DatePicker';
+export * from './Select';
+export * from './Tag';
+export * from './Spin';

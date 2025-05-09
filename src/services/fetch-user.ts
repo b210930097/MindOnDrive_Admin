@@ -2,45 +2,35 @@
 
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase/firebase';
-import type { BranchAdmin, Driver } from '@/types/user';
+import type { User } from '@/types/user';
 
-export async function fetchBranchAdmins(): Promise<BranchAdmin[]> {
-  const snapshot = await getDocs(collection(db, 'branches'));
-
-  const branches = snapshot.docs.map((doc) => {
-    const data = doc.data();
-    return {
-      id: doc.id,
-      email: data.email || '',
-      name: data.name || '',
-      phone: data.phone || '',
-      createdAt: data.createdAt || null,
-      role: 'branchAdmin' as const,
-    };
-  });
-
-  return branches;
-}
-
-export async function fetchDriversByBranch(
-  branchAdminEmail: string,
-): Promise<Driver[]> {
-  const driversRef = collection(db, 'drivers');
-  const q = query(driversRef, where('createdBy', '==', branchAdminEmail));
+export async function fetchUsers(email: string): Promise<User[]> {
+  const ref = collection(db, 'users');
+  const q = query(ref, where('createdBy', '==', email));
 
   const snapshot = await getDocs(q);
 
-  const drivers = snapshot.docs.map((doc) => {
+  const users = snapshot.docs.map((doc) => {
     const data = doc.data();
+
     return {
-      id: doc.id,
-      name: data.name || '',
-      email: data.email || '',
-      phone: data.phone || '',
-      createdAt: data.createdAt || null,
-      role: 'driver' as const,
+      uid: doc.id,
+      role: data.role ?? 'Driver',
+      workStatus: data.workStatus ?? null,
+      detectionStatus: data.detectionStatus ?? null,
+      lastName: data.lastName ?? '',
+      firstName: data.firstName ?? '',
+      email: data.email ?? '',
+      phone: data.phone ?? '',
+      signature: data.signature ?? null,
+      birthdate: data.birthdate ?? null,
+      isTerms: data.isTerms ?? false,
+      companyId: data.companyId ?? '',
+      companyName: data.companyName ?? '',
+      createdAt: data.createdAt ?? '',
+      createdBy: data.createdBy ?? '',
     };
   });
 
-  return drivers;
+  return users;
 }

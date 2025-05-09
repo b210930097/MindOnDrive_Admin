@@ -82,9 +82,9 @@ export function Input({
           </>
         }
         className={cn(
-          'h-[44px] text-text-md font-regular [&_.ant-input-prefix]:text-tertiary [&_input]:font-sans',
+          '[&_.ant-input-prefix]:text-tertiary h-[44px] text-text-md font-regular [&_input]:font-sans',
           '[&_.ant-input-group-addon]:bg-transparent [&_.ant-input-suffix>span>svg]:h-[20px] [&_.ant-input-suffix>span>svg]:w-[20px]',
-          '[&_.ant-input-suffix>span]:m-[0px] [&_.ant-input-suffix>span]:h-[20px] [&_.ant-input-suffix>span]:w-[20px] [&_.ant-input-suffix]:m-[0px] [&_.ant-input-suffix]:text-tertiary',
+          '[&_.ant-input-suffix]:text-tertiary [&_.ant-input-suffix>span]:m-[0px] [&_.ant-input-suffix>span]:h-[20px] [&_.ant-input-suffix>span]:w-[20px] [&_.ant-input-suffix]:m-[0px]',
           className,
         )}
         allowClear={{ clearIcon: <XClose /> }}

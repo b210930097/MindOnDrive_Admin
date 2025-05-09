@@ -8,22 +8,14 @@ import { cn } from '@/utils';
 import { LoadingOutlined } from '@ant-design/icons';
 
 export interface IButtonProps extends Omit<ButtonProps, 'type' | 'color'> {
-  type?:
-    | 'primary'
-    | 'secondary-gray'
-    | 'secondary-color'
-    | 'tertiary-gray'
-    | 'tertiary-color'
-    | 'link-gray'
-    | 'link-color';
+  type?: 'primary' | 'secondary' | 'link';
   destructive?: boolean;
   rightIcon?: React.ReactNode;
   leftIcon?: React.ReactNode;
 }
 
 const StyledButton = styled(AntButton)`
-  &.link-gray,
-  &.link-color {
+  &.link {
     padding: 0px !important;
     height: fit-content !important;
   }
@@ -44,72 +36,34 @@ export function Button({
   ...props
 }: IButtonProps) {
   const buttonVariant = cva(
-    'rounded-sm font-sans text-text-sm shadow-xs [&.ant-btn-loading_.ant-btn-loading-icon]:hidden',
+    'rounded-4xl font-sans text-text-sm shadow-xs [&.ant-btn-loading_.ant-btn-loading-icon]:hidden',
     {
       variants: {
         type: {
           primary: destructive
+            ? cn('border-none bg-danger shadow-xs hover:bg-danger-light')
+            : cn(
+                'border-primary bg-primary shadow-xs',
+                'hover:border hover:border-primary hover:bg-[#f5d8bc] disabled:border-gray disabled:bg-disabled',
+              ),
+          secondary: destructive
             ? cn(
-                'border-none bg-danger shadow-xs',
-                'hover:bg-danger-contrast disabled:bg-danger-light',
+                'border-danger-light bg-white',
+                'hover:bg-danger-secondary disabled:bg-danger-secondary',
               )
             : cn(
-                'border-none bg-brand shadow-xs',
-                'hover:bg-brand-contrast disabled:bg-tertiary',
+                'border-black bg-secondary shadow-xs',
+                'hover:bg-secondary-light',
+                'disabled:border-disabled disabled:bg-disabled',
               ),
-          'secondary-gray': destructive
-            ? cn(
-                'border-danger-light bg-primary shadow-xs',
-                'hover:bg-danger-secondary',
-              )
-            : cn(
-                'border-secondary bg-primary shadow-xs',
-                'hover:border-secondary hover:bg-secondary',
-                'disabled:border-tertiary disabled:bg-primary',
-              ),
-          'secondary-color': destructive
-            ? cn(
-                'border-danger-light bg-danger-secondary shadow-xs',
-                'hover:bg-danger-secondary-contrast',
-              )
-            : cn(
-                'border-brand-light bg-brand-secondary-light shadow-xs',
-                'hover:border-brand-light hover:bg-brand-secondary',
-                'disabled:border-brand-secondary-light disabled:bg-brand-secondary-light',
-              ),
-          'tertiary-gray': destructive
-            ? cn(
-                'border-none shadow-none',
-                'hover:border-none hover:bg-danger-secondary ',
-                'disabled:bg-primary',
-              )
-            : cn(
-                'border-none shadow-none',
-                'hover:bg-secondary disabled:bg-primary',
-              ),
-          'tertiary-color': destructive
-            ? cn(
-                'border-none shadow-none',
-                'hover:border-none hover:bg-danger-secondary disabled:bg-primary',
-              )
-            : cn(
-                'border-none shadow-none',
-                'hover:bg-brand-secondary-contrast disabled:bg-brand-secondary-light',
-              ),
-          'link-gray': destructive
+          link: destructive
             ? cn('border-none shadow-none ', 'disabled:bg-transparent')
             : cn('border-none shadow-none', 'disabled:bg-transparent'),
-          'link-color': destructive
-            ? cn('border-none shadow-none', 'disabled:bg-transparent')
-            : cn(
-                'border-none bg-transparent shadow-none',
-                'disabled:bg-transparent',
-              ),
         },
         size: {
-          small: 'px-2xl py-sm',
-          middle: 'px-3xl py-md',
-          large: 'px-4xl py-lg',
+          small: 'px-8xl py-md',
+          middle: 'px-8xl py-md',
+          large: 'px-4xl',
         },
         destructive: {
           true: 'focus-visible:shadow-4px-error-100 active:shadow-4px-error-100',
@@ -135,7 +89,7 @@ export function Button({
     },
   );
   const textVariant = cva(
-    'flex flex-row items-center justify-center gap-md bg-transparent ',
+    'flex flex-row items-center justify-center gap-md bg-transparent',
     {
       variants: {
         size: {
@@ -147,33 +101,18 @@ export function Button({
             'text-text-sm font-medium',
             '[&_.ant-btn-icon_svg]:h-[22px] [&_.ant-btn-icon_svg]:w-[22px]',
           ),
-          large: 'text-text-sm font-medium',
+          large: 'text-text-xl font-medium',
         },
         type: {
           primary: destructive
-            ? cn('text-invert')
-            : cn(
-                'text-invert',
-                'hover:text-invert aria-disabled:text-secondary-light',
-              ),
-          'secondary-gray': destructive
+            ? cn('text-white')
+            : cn('text-primary', 'aria-disabled:text-disabled'),
+          secondary: destructive
             ? cn('text-danger', 'aria-disabled:text-danger-light')
-            : cn('text-primary', 'aria-disabled:text-secondary-light'),
-          'secondary-color': destructive
-            ? cn('text-danger', 'aria-disabled:text-danger-light')
-            : cn('text-brand', 'aria-disabled:text-brand-light'),
-          'tertiary-gray': destructive
-            ? cn('text-danger', 'aria-disabled:text-danger-light')
-            : cn('text-primary ', 'aria-disabled:text-tertiary'),
-          'tertiary-color': destructive
-            ? cn('text-danger', 'aria-disabled:text-danger-light')
-            : cn('text-brand ', 'aria-disabled:text-tertiary'),
-          'link-gray': destructive
+            : cn('text-primary', 'aria-disabled:text-disabled'),
+          link: destructive
             ? cn('text-danger', 'aria-disabled:text-danger-light')
             : cn('text-primary', 'aria-disabled:text-tertiary'),
-          'link-color': destructive
-            ? cn('text-danger', 'aria-disabled:text-danger-light')
-            : cn('text-brand', 'aria-disabled:text-tertiary'),
         },
       },
       defaultVariants: {
@@ -188,9 +127,9 @@ export function Button({
       theme={{
         components: {
           Button: {
-            controlHeightSM: 36,
+            controlHeightSM: 40,
             controlHeight: 40,
-            controlHeightLG: 44,
+            controlHeightLG: 50,
           },
         },
       }}

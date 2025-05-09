@@ -6,7 +6,7 @@ import { formatDate } from '@/utils/dayjs';
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, phone, password, createdBy } = await req.json();
+    const { companyName, email, phone, password, createdBy } = await req.json();
 
     const userRecord = await adminAuth.createUser({
       email,
@@ -15,19 +15,41 @@ export async function POST(req: NextRequest) {
       emailVerified: false,
       disabled: false,
     });
+    const companyId = crypto.randomUUID();
 
     await db
       .collection('branches')
       .doc(userRecord.uid)
       .set({
-        email,
-        phone,
-        role: 'branchAdmin',
+        ownerId: userRecord.uid,
+        companyId,
+        companyName,
         createdAt: formatDate(new Date()),
         createdBy,
       });
 
-    return NextResponse.json({ success: true });
+    await db
+      .collection('users')
+      .doc(userRecord.uid)
+      .set({
+        uid: userRecord.uid,
+        role: 'Admin',
+        workStatus: null,
+        detectionStatus: null,
+        firstName: null,
+        lastName: null,
+        email,
+        phone,
+        signature: null,
+        birthdate: null,
+        isTerms: false,
+        companyId,
+        companyName,
+        createdAt: formatDate(new Date()),
+        createdBy,
+      });
+
+    return NextResponse.json({ success: true, id: userRecord.uid });
   } catch (error: unknown) {
     console.error(error);
 

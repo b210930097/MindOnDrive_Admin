@@ -1,40 +1,37 @@
 'use client';
 
-import { Table, Button } from '@/components';
-import { signOut } from 'next-auth/react';
-import { message } from 'antd';
+import { useState } from 'react';
+import DashboardContainer from './components/DashboardContainer';
+import { DashboardFilter } from './components/DashboardFilter';
+import type dayjs from 'dayjs';
+import type { DetectionStatus, WorkStatus } from '@/types';
 
 export default function HomePage() {
-  const handleLogout = async () => {
-    try {
-      await signOut({
-        callbackUrl: '/auth',
-      });
-      message.success('Амжилттай гарлаа!');
-    } catch (error) {
-      console.error('Logout error:', error);
-      message.error('Гарахад алдаа гарлаа!');
-    }
-  };
+  const [search, setSearch] = useState('');
+  const [date, setDate] = useState<dayjs.Dayjs | null>(null);
+  const [detectionStatus, setDetectionStatus] = useState<DetectionStatus | ''>(
+    '',
+  );
+  const [workStatus, setWorkStatus] = useState<WorkStatus | ''>('');
 
   return (
-    <div className="p-6">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-[#5c4033]">
-          Жолоочдын жагсаалт
-        </h1>
-
-        <Button
-          type="secondary-gray"
-          size="large"
-          onClick={handleLogout}
-          className="rounded-full font-bold text-[#5c4033]"
-        >
-          Гарах
-        </Button>
-      </div>
-
-      <Table />
+    <div className="flex flex-col gap-md">
+      <DashboardFilter
+        search={search}
+        onSearchChange={setSearch}
+        date={date}
+        onDateChange={setDate}
+        detectionStatus={detectionStatus}
+        onDetectionStatusChange={setDetectionStatus}
+        workStatus={workStatus}
+        onWorkStatusChange={setWorkStatus}
+      />
+      <DashboardContainer
+        search={search}
+        date={date}
+        detectionStatus={detectionStatus}
+        workStatus={workStatus}
+      />
     </div>
   );
 }

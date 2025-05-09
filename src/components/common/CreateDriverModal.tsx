@@ -41,6 +41,8 @@ export function CreateDriverModal({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...values,
+          companyId: session?.user?.companyId,
+          companyName: session?.user?.companyName,
           createdBy: session?.user?.email,
         }),
       });

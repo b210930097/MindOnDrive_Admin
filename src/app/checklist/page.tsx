@@ -70,7 +70,6 @@ export default function ChecklistPage() {
       setLoading(true);
 
       if (editId) {
-        // ✨ Update хийх үед
         const response = await fetch(`/api/checklist/update?id=${editId}`, {
           method: 'PATCH',
           headers: {
@@ -91,7 +90,6 @@ export default function ChecklistPage() {
           message.error(data.message || 'Алдаа гарлаа.');
         }
       } else {
-        // ✨ Шинээр нэмэх үед
         const response = await fetch('/api/checklist/create', {
           method: 'POST',
           headers: {
@@ -158,12 +156,12 @@ export default function ChecklistPage() {
     currentTab === TabType.DRIVER ? driverQuestions : vehicleQuestions;
 
   return (
-    <div className="p-6 gap-8 flex flex-col">
+    <div className="flex flex-col">
       <h1 className="text-3xl font-bold text-[#5c4033]">
         Шалгах хуудас үүсгэх, засах
       </h1>
 
-      <div className="w-[300px]">
+      <div className="w-[400px]">
         <Tabs
           currentTab={currentTab}
           onChange={(key) => setCurrentTab(key as TabType)}
@@ -286,8 +284,6 @@ export default function ChecklistPage() {
         <Button
           onClick={handleAddOrUpdate}
           className="self-end"
-          type="secondary-color"
-          size="large"
           loading={loading}
         >
           {editId ? 'Засах' : 'Нэмэх'}

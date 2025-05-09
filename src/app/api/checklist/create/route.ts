@@ -20,21 +20,21 @@ export async function POST(req: NextRequest) {
 
     if (!type || !question || !createdBy) {
       return NextResponse.json(
-        { success: false, message: 'Missing required fields' },
+        { success: false, message: 'Field error' },
         { status: 400 },
       );
     }
 
     if (type === 'driver' && (isCorrect === undefined || isCorrect === null)) {
       return NextResponse.json(
-        { success: false, message: 'Missing isCorrect for driver checklist' },
+        { success: false, message: 'Missing isCorrect' },
         { status: 400 },
       );
     }
 
     if (type === 'vehicle' && (isFix === undefined || isFix === null)) {
       return NextResponse.json(
-        { success: false, message: 'Missing isFix for vehicle checklist' },
+        { success: false, message: 'Missing isFix' },
         { status: 400 },
       );
     }
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
       );
     }
     return NextResponse.json(
-      { success: false, message: 'Unknown error occurred' },
+      { success: false, message: 'Error' },
       { status: 500 },
     );
   }

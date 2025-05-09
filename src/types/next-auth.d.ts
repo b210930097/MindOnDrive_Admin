@@ -5,16 +5,40 @@ declare module 'next-auth' {
     user: {
       id: string;
       email: string;
-      name?: string | null;
-      image?: string | null;
-      role?: string;
+      name: string;
+      firstName: string;
+      lastName: string;
+      role: string;
+      phone: string;
+      workStatus: string | null;
+      detectionStatus: string | null;
+      signature: string | null;
+      birthdate: string | null;
+      isTerms: boolean;
+      companyId: string;
+      companyName: string;
+      createdBy: string;
+      createdAt: string;
     } & DefaultSession['user'];
   }
 
   interface User {
     id: string;
     email: string;
-    role?: string;
+    name: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+    phone: string;
+    workStatus: string | null;
+    detectionStatus: string | null;
+    signature: string | null;
+    birthdate: string | null;
+    isTerms: boolean;
+    companyId: string;
+    companyName: string;
+    createdBy: string;
+    createdAt: string;
   }
 }
 
@@ -22,6 +46,19 @@ declare module 'next-auth/jwt' {
   interface JWT {
     uid: string;
     email: string;
-    role?: string;
+    name: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+    phone: string;
+    workStatus: string | null;
+    detectionStatus: string | null;
+    signature: string | null;
+    birthdate: string | null;
+    isTerms: boolean;
+    companyId: string;
+    companyName: string;
+    createdBy: string;
+    createdAt: string;
   }
 }

@@ -13,7 +13,7 @@ export async function PATCH(req: NextRequest) {
 
   if (!id) {
     return NextResponse.json(
-      { success: false, message: 'ID байхгүй байна' },
+      { success: false, message: 'Checklist not found' },
       { status: 400 },
     );
   }
@@ -27,7 +27,7 @@ export async function PATCH(req: NextRequest) {
 
     if (Object.keys(updateData).length === 0) {
       return NextResponse.json(
-        { success: false, message: 'Шинэчлэх утга олдсонгүй.' },
+        { success: false, message: 'Update value not found.' },
         { status: 400 },
       );
     }

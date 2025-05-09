@@ -48,10 +48,10 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#fef6ef]">
+    <div className="flex min-h-screen bg-secondary">
       <div className="p-8 flex w-full flex-col items-center justify-center lg:w-1/2">
-        <div className="space-y-8 w-full max-w-md">
-          <h1 className="text-5xl text-center font-bold text-[#5c4033]">
+        <div className=" flex w-full max-w-md flex-col items-center gap-3xl">
+          <h1 className="text-center text-[60px] font-bold text-secondary">
             Нэвтрэх
           </h1>
 
@@ -64,7 +64,7 @@ export default function AuthPage() {
               <Form
                 onFinish={handleSubmit}
                 layout="vertical"
-                className="space-y-4"
+                className="space-y-md"
               >
                 <FormItem name="email" label="Имэйл" required>
                   <Input
@@ -91,41 +91,42 @@ export default function AuthPage() {
                   />
                 </FormItem>
 
-                <div className="text-sm text-gray-600 cursor-pointer text-right hover:underline">
-                  Нууц үг мартсан
+                <div className="flex w-full justify-end">
+                  <Button size="small" type="link">
+                    Нууц үг мартсан
+                  </Button>
                 </div>
 
                 <Button
                   htmlType="submit"
-                  className="text-lg w-full rounded-full bg-[#fbd2af] font-bold text-[#5c4033] hover:bg-[#fbd2af]"
+                  className="min-w-[330px]"
                   size="large"
                   loading={loading}
                 >
                   Нэвтрэх
                 </Button>
-
-                <Tabs
-                  items={[
-                    {
-                      label: 'Ажлын',
-                      key: '1',
-                      number: 2,
-                    },
-                    {
-                      label: 'Хувийн',
-                      key: '2',
-                      number: 2,
-                      disabled: true,
-                    },
-                  ]}
-                />
               </Form>
             )}
           </Formik>
+          <Tabs
+            items={[
+              {
+                label: 'Ажлын',
+                key: '1',
+                number: 2,
+              },
+              {
+                label: 'Хувийн',
+                key: '2',
+                number: 2,
+                disabled: true,
+              },
+            ]}
+          />
         </div>
       </div>
 
-      <div className="hidden w-1/2 items-center justify-center bg-[#fef6ef] lg:flex">
+      <div className="hidden w-1/2 items-center justify-center bg-primary lg:flex">
         <img
           src="/images/MapleLeaf.png"
           alt="Login Illustration"

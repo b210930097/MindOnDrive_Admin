@@ -86,7 +86,7 @@ export function FormItem({
               )}
             >
               {label && (
-                <div className="fons-sans flex gap-sm font-medium text-primary">
+                <div className="fons-sans flex gap-sm font-medium text-black">
                   {label}
                   {required && (
                     <div className="fons-sans font-medium text-danger">

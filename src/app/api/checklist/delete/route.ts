@@ -7,7 +7,7 @@ export async function DELETE(req: NextRequest) {
 
   if (!id) {
     return NextResponse.json(
-      { success: false, message: 'ID байхгүй байна' },
+      { success: false, message: 'Checklist not found' },
       { status: 400 },
     );
   }
