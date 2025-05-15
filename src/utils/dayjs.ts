@@ -25,7 +25,7 @@ dayjs.extend(duration);
 dayjs.extend(toObject);
 
 function formatDate(date: Date) {
-  return dayjs(date).format('YYYY.MM.DD HH:mm');
+  return dayjs(date).format('YYYY.MM.DD HH:mm:ss');
 }
 
 export { dayjs, formatDate };

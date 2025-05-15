@@ -30,12 +30,15 @@ export function CreateAdminModal({
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (values: {
-    companyName: string;
-    email: string;
-    phone: string;
-    password: string;
-  }) => {
+  const onSubmit = async (
+    values: {
+      companyName: string;
+      email: string;
+      phone: string;
+      password: string;
+    },
+    { resetForm }: { resetForm: () => void },
+  ) => {
     setLoading(true);
     try {
       const res = await fetch('/api/admin/create-branch-admin', {
@@ -50,6 +53,7 @@ export function CreateAdminModal({
       const data = await res.json();
       if (data.success) {
         message.success('Салбар амжилттай нэмэгдлээ!');
+        resetForm();
         onClose();
         onSuccess();
       } else {

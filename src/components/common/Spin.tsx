@@ -17,7 +17,7 @@ export function Spin({
   ...props
 }: ISpinProps) {
   const SpinVariants = cva(
-    'bg-tertiary-light [&_.anticon-spin]:text-brand border-tertiary-light rounded-full border-solid',
+    'border-tertiary-light rounded-full border-solid bg-transparent [&_.anticon-spin]:text-primary',
     {
       variants: {
         size: {

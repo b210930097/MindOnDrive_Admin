@@ -37,12 +37,20 @@ export default function ChecklistPage() {
       const data = await response.json();
 
       if (data.success) {
-        const driver = data.checklists.filter(
-          (item: ChecklistItem) => item.type === TabType.DRIVER,
-        );
-        const vehicle = data.checklists.filter(
-          (item: ChecklistItem) => item.type === TabType.VEHICLE,
-        );
+        const driver = data.checklists
+          .filter((item: ChecklistItem) => item.type === TabType.DRIVER)
+          .sort(
+            (a: ChecklistItem, b: ChecklistItem) =>
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+          );
+
+        const vehicle = data.checklists
+          .filter((item: ChecklistItem) => item.type === TabType.VEHICLE)
+          .sort(
+            (a: ChecklistItem, b: ChecklistItem) =>
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+          );
+
         setDriverQuestions(driver);
         setVehicleQuestions(vehicle);
       } else {
@@ -181,23 +189,23 @@ export default function ChecklistPage() {
         />
       </div>
 
-      <div className="mt-6">
-        <h2 className="text-xl mb-4 font-semibold">
+      <div>
+        <h2 className="text-xl font-semibold">
           {currentTab === TabType.DRIVER
             ? 'Жолоочийн асуултууд'
             : 'Тээврийн хэрэгслийн асуултууд'}
           :
         </h2>
 
-        <ul className="gap-4 flex flex-col">
+        <div className="flex w-full flex-col gap-md">
           {currentQuestions.map((item, idx) => (
-            <li
+            <div
               key={idx}
-              className="p-4 border group flex items-center justify-between rounded-md transition hover:shadow-md"
+              className="border group flex min-h-10xl items-center justify-between rounded-md bg-white p-md shadow-md"
             >
               <span className="text-base font-medium">{item.question}</span>
 
-              <div className="gap-2 hidden group-hover:flex">
+              <div className="hidden gap-sm group-hover:flex">
                 <Button
                   type="primary"
                   onClick={() => {
@@ -217,12 +225,12 @@ export default function ChecklistPage() {
                   Устгах
                 </Button>
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
 
-      <div className="gap-6 mt-6 flex flex-col">
+      <div className="mt-md flex flex-col gap-md">
         <Input.TextArea
           placeholder={
             currentTab === TabType.DRIVER
@@ -236,9 +244,9 @@ export default function ChecklistPage() {
         />
 
         {currentTab === TabType.DRIVER ? (
-          <div className="gap-4 flex">
+          <div className="flex gap-sm">
             <span>Зөв хариулт:</span>
-            <label className="gap-1 flex items-center">
+            <label className="flex items-center gap-xxs">
               <input
                 type="radio"
                 value="true"
@@ -247,7 +255,7 @@ export default function ChecklistPage() {
               />
               Тийм
             </label>
-            <label className="gap-1 flex items-center">
+            <label className="flex items-center gap-xxs">
               <input
                 type="radio"
                 value="false"
@@ -258,9 +266,9 @@ export default function ChecklistPage() {
             </label>
           </div>
         ) : (
-          <div className="gap-4 flex">
+          <div className="flex gap-xs">
             <span>Анхан байдал:</span>
-            <label className="gap-1 flex items-center">
+            <label className="flex items-center gap-xxs">
               <input
                 type="radio"
                 value="false"
@@ -269,7 +277,7 @@ export default function ChecklistPage() {
               />
               Хэвийн
             </label>
-            <label className="gap-1 flex items-center">
+            <label className="flex items-center gap-xxs">
               <input
                 type="radio"
                 value="true"

@@ -64,7 +64,7 @@ export default function AuthPage() {
               <Form
                 onFinish={handleSubmit}
                 layout="vertical"
-                className="space-y-md"
+                className="gap-md"
               >
                 <FormItem name="email" label="Имэйл" required>
                   <Input

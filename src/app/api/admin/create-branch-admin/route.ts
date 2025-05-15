@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { adminAuth } from '@/lib/firebase/firebaseAdmin';
 import { db } from '@/lib/firebase/firebaseAdminDb';
 import { formatDate } from '@/utils/dayjs';
+import { generateId } from '@/utils';
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,7 +16,8 @@ export async function POST(req: NextRequest) {
       emailVerified: false,
       disabled: false,
     });
-    const companyId = crypto.randomUUID();
+    const companyId = generateId('CMP');
+    const workerId = generateId('ADN');
 
     await db
       .collection('branches')
@@ -35,7 +37,9 @@ export async function POST(req: NextRequest) {
         uid: userRecord.uid,
         role: 'Admin',
         workStatus: null,
+        image: null,
         detectionStatus: null,
+        checklistStatus: null,
         firstName: null,
         lastName: null,
         email,
@@ -45,6 +49,7 @@ export async function POST(req: NextRequest) {
         isTerms: false,
         companyId,
         companyName,
+        workerId,
         createdAt: formatDate(new Date()),
         createdBy,
       });

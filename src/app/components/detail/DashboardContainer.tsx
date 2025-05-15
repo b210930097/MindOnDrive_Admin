@@ -7,6 +7,11 @@ import { Table } from '@/components';
 import { getDashboardColumns } from './DashboardColumns';
 import type { User, WorkStatus, DetectionStatus } from '@/types';
 import dayjs from 'dayjs';
+import {
+  ChecklistModal,
+  WorkStatusModal,
+  DetectionStatusModal,
+} from '../modal';
 
 interface Props {
   search: string;
@@ -15,7 +20,7 @@ interface Props {
   workStatus: WorkStatus | '';
 }
 
-export default function DashboardContainer({
+export function DashboardContainer({
   search,
   date,
   detectionStatus,
@@ -25,6 +30,21 @@ export default function DashboardContainer({
   const [data, setData] = useState<User[]>([]);
   const [filteredData, setFilteredData] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
+  const [modalData, setModalData] = useState<{
+    type: 'status' | 'detection' | 'checklist' | null;
+    record: User | null;
+  }>({ type: null, record: null });
+
+  const handleModalOpen = (
+    type: 'status' | 'detection' | 'checklist',
+    record: User,
+  ) => {
+    setModalData({ type, record });
+  };
+
+  const handleModalClose = () => {
+    setModalData({ type: null, record: null });
+  };
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -46,7 +66,7 @@ export default function DashboardContainer({
     let result = [...data];
 
     if (search) {
-      const normalizedSearch = search.toLowerCase().replace(/['\s]/g, '');
+      const normalized = search.toLowerCase().replace(/['\s]/g, '');
       result = result.filter((u) => {
         const fullName = `${u.firstName ?? ''}${u.lastName ?? ''}`
           .toLowerCase()
@@ -55,11 +75,13 @@ export default function DashboardContainer({
           .toLowerCase()
           .replace(/['\s]/g, '');
         const uid = (u.uid ?? '').toLowerCase();
+        const email = (u.email ?? '').toLowerCase();
 
         return (
-          fullName.includes(normalizedSearch) ||
-          reversed.includes(normalizedSearch) ||
-          uid.includes(normalizedSearch)
+          fullName.includes(normalized) ||
+          reversed.includes(normalized) ||
+          uid.includes(normalized) ||
+          email.includes(normalized)
         );
       });
     }
@@ -80,10 +102,29 @@ export default function DashboardContainer({
   }, [data, search, date, detectionStatus, workStatus]);
 
   return (
-    <Table
-      data={filteredData}
-      loading={loading}
-      columns={getDashboardColumns()}
-    />
+    <>
+      <Table
+        data={filteredData}
+        loading={loading}
+        columns={getDashboardColumns(handleModalOpen)}
+      />
+
+      {modalData.type === 'status' && modalData.record && (
+        <WorkStatusModal
+          record={modalData.record}
+          onClose={handleModalClose}
+          onUpdated={loadData}
+        />
+      )}
+      {modalData.type === 'detection' && modalData.record && (
+        <DetectionStatusModal
+          record={modalData.record}
+          onClose={handleModalClose}
+        />
+      )}
+      {modalData.type === 'checklist' && modalData.record && (
+        <ChecklistModal record={modalData.record} onClose={handleModalClose} />
+      )}
+    </>
   );
 }

@@ -44,7 +44,7 @@ export function Sidebar() {
 
   return (
     <div className="w-64 py-6 flex min-h-screen flex-col justify-between bg-primary text-[#5c4033]">
-      <div className="space-y-2 flex flex-col">
+      <div className="flex flex-col gap-md">
         {menuItems.map((item) => (
           <div
             key={item.path}

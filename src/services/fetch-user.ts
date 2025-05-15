@@ -15,6 +15,8 @@ export async function fetchUsers(email: string): Promise<User[]> {
 
     return {
       uid: doc.id,
+      workerId: data.workerId,
+      image: data.image ?? null,
       role: data.role ?? 'Driver',
       workStatus: data.workStatus ?? null,
       detectionStatus: data.detectionStatus ?? null,

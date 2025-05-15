@@ -43,6 +43,8 @@ const handler = NextAuth({
 
           return {
             id: user.uid,
+            workerId: userData.workerId || '',
+            image: userData.image || '',
             email: user.email,
             name: `${userData.firstName || ''} ${userData.lastName || ''}`.trim(),
             firstName: userData.firstName || '',
@@ -81,6 +83,8 @@ const handler = NextAuth({
         return {
           ...token,
           uid,
+          workerId: userData.workerId || '',
+          image: userData.image || '',
           email: userData.email || token.email,
           name: `${userData.firstName || ''} ${userData.lastName || ''}`.trim(),
           firstName: userData.firstName || '',
@@ -105,6 +109,8 @@ const handler = NextAuth({
     async session({ session, token }) {
       session.user = {
         id: token.uid,
+        workerId: token.workerId,
+        image: token.image,
         email: token.email,
         name: token.name,
         firstName: token.firstName,

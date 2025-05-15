@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { adminAuth } from '@/lib/firebase/firebaseAdmin';
 import { db } from '@/lib/firebase/firebaseAdminDb';
 import { formatDate } from '@/utils/dayjs';
+import { generateId } from '@/utils';
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,14 +18,22 @@ export async function POST(req: NextRequest) {
       disabled: false,
     });
 
+    const workerId = generateId('DRV');
+
     await db
       .collection('users')
       .doc(userRecord.uid)
       .set({
         uid: userRecord.uid,
         role: 'Driver',
-        workStatus: null,
-        detectionStatus: null,
+        workStatus: 'Бэлэн биш',
+        image: null,
+        detectionStatus: 'Тодорхойгүй',
+        checklistStatus: {
+          driver: 'not_started',
+          vehicle: 'not_started',
+          confirmed: 'not_started',
+        },
         firstName: null,
         lastName: null,
         email,
@@ -34,6 +43,7 @@ export async function POST(req: NextRequest) {
         isTerms: false,
         companyId,
         companyName,
+        workerId,
         createdAt: formatDate(new Date()),
         createdBy,
       });

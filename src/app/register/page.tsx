@@ -3,9 +3,8 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { Button, CreateAdminModal, CreateDriverModal } from '@/components';
-import RegisterContainer from './components/RegisterContainer';
-import { RegisterFilter } from './components/RegisterFilter';
 import type dayjs from 'dayjs';
+import { RegisterFilter, RegisterContainer } from './components/detail';
 
 export default function RegisterPage() {
   const [open, setOpen] = useState(false);

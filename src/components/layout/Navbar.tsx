@@ -6,6 +6,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { alertModal } from '../UseAlertModal';
 import { useRouter } from 'next/navigation';
 import { Routes } from '@/config/routes';
+import { getFullName } from '@/utils';
 
 export function Navbar() {
   const router = useRouter();
@@ -79,9 +80,7 @@ export function Navbar() {
           <Avatar src="/admin-profile.jpg" size="small" />
           <Space size="small">
             <Typography.Text className="font-medium">
-              {session?.user.lastName && session?.user.firstName
-                ? session.user.lastName + ' ' + session.user.firstName
-                : session?.user.email}
+              {getFullName(session?.user ?? {})}
             </Typography.Text>
             <DownOutlined style={{ fontSize: '12px', color: 'gray' }} />
           </Space>

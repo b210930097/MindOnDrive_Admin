@@ -39,8 +39,8 @@ export function RegisterFilter({
           value={role}
           placeholder="Role сонгох"
           options={[
-            { label: 'Admin', value: 'admin' },
-            { label: 'Driver', value: 'driver' },
+            { label: 'Admin', value: 'Admin' },
+            { label: 'Driver', value: 'Driver' },
           ]}
           onChange={(e) => onRoleChange(e || '')}
         />

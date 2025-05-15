@@ -12,6 +12,8 @@ export type ProfileFormInput = {
   lastName: string;
   firstName: string;
   phone: string;
+  companyName: string;
+  email: string;
 };
 
 const validationSchema = Yup.object().shape({
@@ -34,6 +36,8 @@ export default function ProfileEditPage() {
     lastName: session.user.lastName || '',
     firstName: session.user.firstName || '',
     phone: session.user.phone || '',
+    companyName: session.user.companyName || '',
+    email: session.user.email || '',
   };
 
   const onSubmit = async (values: ProfileFormInput) => {
@@ -91,18 +95,12 @@ export default function ProfileEditPage() {
                 <FormItem label="Байгууллагын нэр" name="companyName">
                   <Input
                     name="companyName"
-                    value={session.user.companyName}
                     disabled
                     placeholder="Байгууллагын нэр"
                   />
                 </FormItem>
                 <FormItem label="И-мэйл" name="email">
-                  <Input
-                    value={session.user.email}
-                    name="email"
-                    disabled
-                    placeholder="И-мэйл"
-                  />
+                  <Input name="email" disabled placeholder="И-мэйл" />
                 </FormItem>
               </ProfileCard>
             )}

@@ -15,12 +15,7 @@ interface Props {
   role: string;
 }
 
-export default function RegisterContainer({
-  reloadFlag,
-  search,
-  date,
-  role,
-}: Props) {
+export function RegisterContainer({ reloadFlag, search, date, role }: Props) {
   const { data: session } = useSession();
   const [data, setData] = useState<User[]>([]);
   const [filteredData, setFilteredData] = useState<User[]>([]);
@@ -54,11 +49,14 @@ export default function RegisterContainer({
         const reverse = `${u.lastName ?? ''}${u.firstName ?? ''}`
           .toLowerCase()
           .replace(/['\s]/g, '');
+        const email = (u.email ?? '').toLowerCase();
+        const phone = (u.phone ?? '').toLowerCase();
+
         return (
           fullname.includes(normalized) ||
           reverse.includes(normalized) ||
-          (u.email ?? '').toLowerCase().includes(normalized) ||
-          (u.phone ?? '').toLowerCase().includes(normalized)
+          email.includes(normalized) ||
+          phone.includes(normalized)
         );
       });
     }

@@ -43,7 +43,7 @@ export function DashboardFilter({
           <div className="text-text-sm font-medium">Нэр</div>
           <Input
             isSearch
-            placeholder="Овог, Нэрээр хайх"
+            placeholder="Нэр, имэйл, утас..."
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
           />
@@ -58,6 +58,7 @@ export function DashboardFilter({
             value={detectionStatus}
             placeholder="Явц сонгох"
             options={[
+              { label: 'Тодорхойгүй', value: 'Тодорхойгүй' },
               { label: 'Зүүрмэглэсэн', value: 'Зүүрмэглэсэн' },
               { label: 'Сатаарсан', value: 'Сатаарсан' },
               { label: 'Сэрүүн', value: 'Сэрүүн' },
@@ -73,6 +74,7 @@ export function DashboardFilter({
             value={workStatus}
             placeholder="Статус сонгох"
             options={[
+              { label: 'Бэлэн биш', value: 'Бэлэн биш' },
               { label: 'Бэлэн', value: 'Бэлэн' },
               { label: 'Хүлээгдэж байна', value: 'Хүлээгдэж байна' },
               { label: 'Ажиллах боломжгүй', value: 'Ажиллах боломжгүй' },

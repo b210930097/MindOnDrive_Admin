@@ -1,8 +1,20 @@
-export type WorkStatus = 'Бэлэн' | 'Хүлээгдэж байна' | 'Ажиллах боломжгүй';
-export type DetectionStatus = 'Зүүрмэглэсэн' | 'Сатаарсан' | 'Сэрүүн';
+export type WorkStatus =
+  | 'Бэлэн биш'
+  | 'Бэлэн'
+  | 'Хүлээгдэж байна'
+  | 'Ажиллах боломжгүй';
+export type DetectionStatus =
+  | 'Тодорхойгүй'
+  | 'Зүүрмэглэсэн'
+  | 'Сатаарсан'
+  | 'Сэрүүн';
+
+export type StepStatus = 'not_started' | 'doing' | 'done';
 
 export interface User {
   uid: string;
+  workerId: string;
+  image: string;
   role: string;
   workStatus: WorkStatus | null;
   detectionStatus: DetectionStatus | null;
@@ -17,9 +29,9 @@ export interface User {
   companyName: string;
   createdAt: string;
   createdBy: string;
-  // checklistStatus?: {
-  //   driver: boolean;
-  //   vehicle: boolean;
-  //   confirmed: boolean;
-  // };
+  checklistStatus?: {
+    driver: StepStatus;
+    vehicle: StepStatus;
+    confirmed: StepStatus;
+  };
 }

@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import DashboardContainer from './components/DashboardContainer';
-import { DashboardFilter } from './components/DashboardFilter';
+import { DashboardFilter, DashboardContainer } from './components/detail';
 import type dayjs from 'dayjs';
 import type { DetectionStatus, WorkStatus } from '@/types';
 

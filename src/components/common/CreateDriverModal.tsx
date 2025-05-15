@@ -29,11 +29,14 @@ export function CreateDriverModal({
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (values: {
-    email: string;
-    phone: string;
-    password: string;
-  }) => {
+  const onSubmit = async (
+    values: {
+      email: string;
+      phone: string;
+      password: string;
+    },
+    { resetForm }: { resetForm: () => void },
+  ) => {
     setLoading(true);
     try {
       const res = await fetch('/api/admin/create-driver', {
@@ -50,6 +53,7 @@ export function CreateDriverModal({
       const data = await res.json();
       if (data.success) {
         message.success('Жолооч амжилттай нэмэгдлээ!');
+        resetForm();
         onClose();
         onSuccess();
       } else {
@@ -67,7 +71,7 @@ export function CreateDriverModal({
     <Modal open={open} onCancel={onClose} footer={null} centered>
       <div className="p-8">
         <h2 className="text-2xl mb-6 text-center font-bold">
-          Шинэ Жолооч нэмэх
+          Шинэ жолооч нэмэх
         </h2>
         <Formik
           initialValues={{ email: '', phone: '', password: '' }}
@@ -75,8 +79,8 @@ export function CreateDriverModal({
           onSubmit={onSubmit}
         >
           {({ handleSubmit, handleChange, values }) => (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <FormItem name="email" required>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-md p-md">
+              <FormItem name="email" required label="Имэйл">
                 <Input
                   name="email"
                   value={values.email}
@@ -84,7 +88,7 @@ export function CreateDriverModal({
                   placeholder="Имэйл"
                 />
               </FormItem>
-              <FormItem name="phone" required>
+              <FormItem name="phone" required label="Утас">
                 <Input
                   name="phone"
                   value={values.phone}
@@ -92,7 +96,7 @@ export function CreateDriverModal({
                   placeholder="Утас"
                 />
               </FormItem>
-              <FormItem name="password" required>
+              <FormItem name="password" required label="Нууц үг">
                 <Input
                   type="password"
                   name="password"
