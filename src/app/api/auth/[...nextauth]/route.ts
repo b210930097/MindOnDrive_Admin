@@ -33,7 +33,6 @@ const handler = NextAuth({
 
           if (!userData) return null;
 
-          // ✅ Ensure createdAt exists
           if (!userData.createdAt) {
             await db.collection('users').doc(user.uid).update({
               createdAt: new Date().toISOString(),
@@ -71,7 +70,6 @@ const handler = NextAuth({
 
   callbacks: {
     async jwt({ token, user, trigger }) {
-      // When user just logged in or when session is being refreshed manually
       if (user || trigger === 'update') {
         const uid = user?.id || token?.uid;
         const userDoc = await db.collection('users').doc(uid).get();

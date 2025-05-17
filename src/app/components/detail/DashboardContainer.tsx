@@ -48,14 +48,14 @@ export function DashboardContainer({
 
   const loadData = useCallback(async () => {
     setLoading(true);
-    try {
-      const drivers = await fetchUsers(session?.user?.email ?? '');
-      setData(drivers);
-    } catch (error) {
-      console.error('Failed to load data:', error);
-    } finally {
+    if (!session?.user?.email) return;
+
+    const unsubscribe = fetchUsers(session.user.email, (fetchedUsers) => {
+      setData(fetchedUsers);
       setLoading(false);
-    }
+    });
+
+    return () => unsubscribe();
   }, [session?.user?.email]);
 
   useEffect(() => {
