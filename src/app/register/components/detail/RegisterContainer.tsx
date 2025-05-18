@@ -23,14 +23,14 @@ export function RegisterContainer({ reloadFlag, search, date, role }: Props) {
 
   const loadData = useCallback(async () => {
     setLoading(true);
-    try {
-      const users = await fetchUsers(session?.user?.email ?? '');
-      setData(users);
-    } catch (error) {
-      console.error('Failed to load data:', error);
-    } finally {
+    if (!session?.user?.email) return;
+
+    const unsubscribe = fetchUsers(session.user.email, (fetchedUsers) => {
+      setData(fetchedUsers);
       setLoading(false);
-    }
+    });
+
+    return () => unsubscribe();
   }, [session?.user?.email]);
 
   useEffect(() => {

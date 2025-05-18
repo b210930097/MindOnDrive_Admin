@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Modal, Spin } from 'antd';
-import type { User } from '@/types';
+import type { Answer, User } from '@/types';
 import { getFullName, checklistStatusLabels } from '@/utils';
 import {
   doc,
@@ -22,7 +22,7 @@ export function ChecklistModal({
   onClose: () => void;
 }) {
   const [status, setStatus] = useState(record.checklistStatus);
-  const [answers, setAnswers] = useState<any[]>([]);
+  const [answers, setAnswers] = useState<Answer[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export function ChecklistModal({
           where('userId', '==', record.uid),
         );
         const snapshot = await getDocs(q);
-        const data: any[] = snapshot.docs.map((doc) => doc.data() as any);
+        const data: Answer[] = snapshot.docs.map((doc) => doc.data() as Answer);
         setAnswers(data);
       } catch (error) {
         console.error('Failed to fetch answers:', error);
