@@ -77,7 +77,7 @@ export function Navbar() {
         mouseLeaveDelay={0.2}
       >
         <div className="flex items-center gap-md rounded-md p-md hover:bg-[#f5d8bc]">
-          <Avatar src="/admin-profile.jpg" size="small" />
+          <Avatar icon={<UserOutlined />} size="small" />
           <Space size="small">
             <Typography.Text className="font-medium">
               {getFullName(session?.user ?? {})}

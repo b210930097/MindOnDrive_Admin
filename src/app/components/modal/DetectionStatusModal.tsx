@@ -9,23 +9,12 @@ import { LinePath } from '@visx/shape';
 import { scaleLinear, scaleTime } from '@visx/scale';
 import { curveBasis } from '@visx/curve';
 import { AxisBottom, AxisLeft } from '@visx/axis';
-import { getFullName } from '@/utils';
+import { detectionConvert } from '@/utils';
+import { UserCard } from '@/components';
 
 const width = 700,
   height = 300,
   margin = { top: 20, right: 30, bottom: 30, left: 100 };
-const detectionStatusToY = (status: string) => {
-  switch (status) {
-    case 'Сэрүүн':
-      return 0;
-    case 'Сатаарсан':
-      return 1;
-    case 'Зүүрмэглэсэн':
-      return 2;
-    default:
-      return 0;
-  }
-};
 
 export function DetectionStatusModal({
   record,
@@ -44,20 +33,18 @@ export function DetectionStatusModal({
   const currentYRef = useRef(0);
   const [now, setNow] = useState(Date.now());
 
-  // Firestore listener
   useEffect(() => {
     if (!record.uid) return;
 
     const ref = doc(db, 'users', record.uid);
     const unsub = onSnapshot(ref, (snap) => {
       const status = snap.data()?.detectionStatus ?? '';
-      currentYRef.current = detectionStatusToY(status);
+      currentYRef.current = detectionConvert(status);
     });
 
     return () => unsub();
   }, [record.uid]);
 
-  // Push new data point every second
   useEffect(() => {
     const interval = setInterval(() => {
       setData((prev) => [
@@ -68,7 +55,6 @@ export function DetectionStatusModal({
     return () => clearInterval(interval);
   }, []);
 
-  // Animate time to update smoothly
   useEffect(() => {
     let animationFrameId: number;
 
@@ -100,32 +86,39 @@ export function DetectionStatusModal({
       width={width + 40}
     >
       <div className="space-y-sm">
-        <p>Хэрэглэгч:{getFullName(record)}</p>
-        <svg width={width} height={height}>
-          <AxisBottom scale={xScale} top={height - margin.bottom} />
-          <AxisLeft
-            scale={yScale}
-            left={margin.left}
-            tickFormat={(v) =>
-              ['Сэрүүн', 'Сатаарсан', 'Зүүрмэглэсэн'][Number(v)] ?? ''
-            }
-            tickLabelProps={() => ({
-              fontSize: 12,
-              textAnchor: 'end',
-              dx: '-0.5em',
-              dy: '0.33em',
-            })}
-          />
+        <UserCard user={record} />
 
-          <LinePath
-            data={data}
-            x={(d) => xScale(d.x)}
-            y={(d) => yScale(d.y)}
-            stroke="#4f46e5"
-            strokeWidth={2}
-            curve={curveBasis}
-          />
-        </svg>
+        {record.workStatus === 'Бэлэн' ? (
+          <svg width={width} height={height}>
+            <AxisBottom scale={xScale} top={height - margin.bottom} />
+            <AxisLeft
+              scale={yScale}
+              left={margin.left}
+              tickFormat={(v) =>
+                ['Сэрүүн', 'Сатаарсан', 'Зүүрмэглэсэн'][Number(v)] ?? ''
+              }
+              tickLabelProps={() => ({
+                fontSize: 12,
+                textAnchor: 'end',
+                dx: '-0.5em',
+                dy: '0.33em',
+              })}
+            />
+
+            <LinePath
+              data={data}
+              x={(d) => xScale(d.x)}
+              y={(d) => yScale(d.y)}
+              stroke="#4f46e5"
+              strokeWidth={2}
+              curve={curveBasis}
+            />
+          </svg>
+        ) : (
+          <div className="flex items-center justify-center">
+            <p>Жолооч ажилд {record.workStatus} байна</p>
+          </div>
+        )}
       </div>
     </Modal>
   );

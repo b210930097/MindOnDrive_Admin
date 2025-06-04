@@ -16,6 +16,7 @@ declare module 'next-auth' {
       detectionStatus: string | null;
       signature: string | null;
       birthdate: string | null;
+      comfirmedDate: string | null;
       isTerms: boolean;
       companyId: string;
       companyName: string;
@@ -38,6 +39,7 @@ declare module 'next-auth' {
     detectionStatus: string | null;
     signature: string | null;
     birthdate: string | null;
+    comfirmedDate: string | null;
     isTerms: boolean;
     companyId: string;
     companyName: string;
@@ -61,6 +63,7 @@ declare module 'next-auth/jwt' {
     detectionStatus: string | null;
     signature: string | null;
     birthdate: string | null;
+    comfirmedDate: string | null;
     isTerms: boolean;
     companyId: string;
     companyName: string;

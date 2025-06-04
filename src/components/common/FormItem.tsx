@@ -12,8 +12,7 @@ const StyledFormItem = styled(Form.Item)`
   margin: 0 !important;
   .ant-form-item-explain-error {
     font-family: Rubik, sans-serif;
-    // margin-top: ${(props) => props.theme.spacing.xl} !important;
-    font-size: ${(props) => props.theme.fontSize['text-xl']} !important;
+    font-size: !important;
   }
   .ant-input-affix-wrapper {
     &.ant-input-affix-wrapper-disabled {

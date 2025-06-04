@@ -7,7 +7,9 @@ import type { DetectionStatus, WorkStatus } from '@/types';
 
 export default function HomePage() {
   const [search, setSearch] = useState('');
-  const [date, setDate] = useState<dayjs.Dayjs | null>(null);
+  const [dateRange, setDateRange] = useState<
+    [dayjs.Dayjs | null, dayjs.Dayjs | null]
+  >([null, null]);
   const [detectionStatus, setDetectionStatus] = useState<DetectionStatus | ''>(
     '',
   );
@@ -18,8 +20,8 @@ export default function HomePage() {
       <DashboardFilter
         search={search}
         onSearchChange={setSearch}
-        date={date}
-        onDateChange={setDate}
+        dateRange={dateRange}
+        onDateRangeChange={setDateRange}
         detectionStatus={detectionStatus}
         onDetectionStatusChange={setDetectionStatus}
         workStatus={workStatus}
@@ -27,7 +29,7 @@ export default function HomePage() {
       />
       <DashboardContainer
         search={search}
-        date={date}
+        dateRange={dateRange}
         detectionStatus={detectionStatus}
         workStatus={workStatus}
       />

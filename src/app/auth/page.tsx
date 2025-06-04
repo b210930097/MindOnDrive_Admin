@@ -128,7 +128,7 @@ export default function AuthPage() {
 
       <div className="hidden w-1/2 items-center justify-center bg-primary lg:flex">
         <img
-          src="/images/MapleLeaf.png"
+          src="/images/image.png"
           alt="Login Illustration"
           className="max-h-[500px] object-contain"
         />

@@ -68,6 +68,12 @@ export default function ChecklistPage() {
     }
   }, [session?.user?.email, fetchChecklist]);
 
+  useEffect(() => {
+    if (currentTab === TabType.VEHICLE) {
+      setCorrectAnswer(false);
+    }
+  }, [currentTab]);
+
   const handleAddOrUpdate = async () => {
     if (!inputValue.trim() || correctAnswer === null) {
       message.error('Асуулт болон хариултын утгаа бөглөнө үү!');
@@ -123,7 +129,11 @@ export default function ChecklistPage() {
 
       setInputValue('');
       setEditId(null);
-      setCorrectAnswer(null);
+      if (currentTab === TabType.VEHICLE) {
+        setCorrectAnswer(false);
+      } else if (currentTab === TabType.DRIVER) {
+        setCorrectAnswer(null);
+      }
       fetchChecklist();
     } catch (error) {
       console.error(error);
@@ -243,7 +253,7 @@ export default function ChecklistPage() {
           className="p-4 border rounded-md"
         />
 
-        {currentTab === TabType.DRIVER ? (
+        {currentTab === TabType.DRIVER && (
           <div className="flex gap-sm">
             <span>Зөв хариулт:</span>
             <label className="flex items-center gap-xxs">
@@ -263,28 +273,6 @@ export default function ChecklistPage() {
                 onChange={() => setCorrectAnswer(false)}
               />
               Үгүй
-            </label>
-          </div>
-        ) : (
-          <div className="flex gap-xs">
-            <span>Анхан байдал:</span>
-            <label className="flex items-center gap-xxs">
-              <input
-                type="radio"
-                value="false"
-                checked={correctAnswer === false}
-                onChange={() => setCorrectAnswer(false)}
-              />
-              Хэвийн
-            </label>
-            <label className="flex items-center gap-xxs">
-              <input
-                type="radio"
-                value="true"
-                checked={correctAnswer === true}
-                onChange={() => setCorrectAnswer(true)}
-              />
-              Засах шаардлагатай
             </label>
           </div>
         )}

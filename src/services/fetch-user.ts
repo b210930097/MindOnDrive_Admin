@@ -4,13 +4,17 @@ import type { User } from '@/types/user';
 
 export function fetchUsers(
   email: string,
+  dashboard: boolean,
   onUpdate: (users: User[]) => void,
 ): () => void {
   const ref = collection(db, 'users');
-  const q = query(ref, where('createdBy', '==', email));
+  const q =
+    email === 'super@admin.com'
+      ? query(ref)
+      : query(ref, where('createdBy', '==', email));
 
   const unsubscribe = onSnapshot(q, (snapshot) => {
-    const users: User[] = snapshot.docs.map((doc) => {
+    let users: User[] = snapshot.docs.map((doc) => {
       const data = doc.data();
       return {
         uid: doc.id,
@@ -25,6 +29,7 @@ export function fetchUsers(
         phone: data.phone ?? '',
         signature: data.signature ?? null,
         birthdate: data.birthdate ?? null,
+        comfirmedDate: data.comfirmedDate ?? null,
         isTerms: data.isTerms ?? false,
         companyId: data.companyId ?? '',
         companyName: data.companyName ?? '',
@@ -33,6 +38,12 @@ export function fetchUsers(
         checklistStatus: data.checklistStatus ?? null,
       };
     });
+    if (email === 'super@admin.com') {
+      users = users.filter((user) => user.email !== 'super@admin.com');
+    }
+    if (dashboard) {
+      users = users.filter((user) => user.role === 'Driver');
+    }
     onUpdate(users);
   });
 

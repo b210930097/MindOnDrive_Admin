@@ -10,7 +10,9 @@ export default function RegisterPage() {
   const [open, setOpen] = useState(false);
   const [reloadFlag, setReloadFlag] = useState(false);
   const [search, setSearch] = useState('');
-  const [date, setDate] = useState<dayjs.Dayjs | null>(null);
+  const [dateRange, setDateRange] = useState<
+    [dayjs.Dayjs | null, dayjs.Dayjs | null]
+  >([null, null]);
   const [role, setRole] = useState('');
   const { data: session } = useSession();
 
@@ -28,8 +30,8 @@ export default function RegisterPage() {
       <RegisterFilter
         search={search}
         onSearchChange={setSearch}
-        date={date}
-        onDateChange={setDate}
+        dateRange={dateRange}
+        onDateRangeChange={setDateRange}
         role={role}
         onRoleChange={setRole}
       />
@@ -37,7 +39,7 @@ export default function RegisterPage() {
       <RegisterContainer
         reloadFlag={reloadFlag}
         search={search}
-        date={date}
+        dateRange={dateRange}
         role={role}
       />
 

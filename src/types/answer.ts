@@ -5,7 +5,7 @@ export type Answer = {
   signature: string;
   isCorrect: boolean;
   isFix: boolean;
-  vehicleNumber: string;
+  vehiclePlate: string;
   questionId: string;
   question: string;
   companyId: string;

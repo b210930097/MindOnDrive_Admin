@@ -4,7 +4,7 @@ import { useState } from 'react';
 import type { User, WorkStatus } from '@/types';
 import { updateDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/firebase';
-import { getFullName } from '@/utils';
+import { UserCard } from '@/components';
 
 const statusOptions: WorkStatus[] = [
   'Бэлэн биш',
@@ -53,11 +53,12 @@ export function WorkStatusModal({
       onCancel={onClose}
       onOk={handleSave}
       okText="Хадгалах"
+      cancelText="Буцах"
       confirmLoading={loading}
       title="Ажлын статус засах"
     >
       <div className="gap-md">
-        <p>Хэрэглэгч:{getFullName(record)}</p>
+        <UserCard user={record} />
         <Select
           className="w-full"
           value={status}

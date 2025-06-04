@@ -46,6 +46,7 @@ export async function POST(req: NextRequest) {
         phone,
         signature: null,
         birthdate: null,
+        comfirmedDate: null,
         isTerms: false,
         companyId,
         companyName,

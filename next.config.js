@@ -17,6 +17,9 @@ const cspHeader = `
 
 const nextConfig = {
   reactStrictMode: true,
+  experimental: {
+    esmExternals: 'loose'
+  },
   swcMinify: true,
   compiler: {
     styledComponents: true,

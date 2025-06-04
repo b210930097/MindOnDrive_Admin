@@ -7,6 +7,7 @@ import { Input, Button, FormItem, ProfileCard } from '@/components';
 import { Avatar, Form, message } from 'antd';
 import * as Yup from 'yup';
 import { updateUserProfile } from '@/services/updateUser';
+import { UserOutlined } from '@ant-design/icons';
 
 export type ProfileFormInput = {
   lastName: string;
@@ -72,7 +73,7 @@ export default function ProfileEditPage() {
           >
             <div className="flex w-full items-center justify-between gap-md">
               <div className="flex items-center gap-md">
-                <Avatar src="/admin-profile.jpg" size="large" />
+                <Avatar icon={<UserOutlined />} size="large" />
                 <div className="text-display-xs font-medium">
                   {session?.user.lastName && session?.user.firstName
                     ? session.user.lastName + ' ' + session.user.firstName

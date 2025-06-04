@@ -15,14 +15,14 @@ import {
 
 interface Props {
   search: string;
-  date: dayjs.Dayjs | null;
+  dateRange: [dayjs.Dayjs | null, dayjs.Dayjs | null];
   detectionStatus: DetectionStatus | '';
   workStatus: WorkStatus | '';
 }
 
 export function DashboardContainer({
   search,
-  date,
+  dateRange,
   detectionStatus,
   workStatus,
 }: Props) {
@@ -50,7 +50,7 @@ export function DashboardContainer({
     setLoading(true);
     if (!session?.user?.email) return;
 
-    const unsubscribe = fetchUsers(session.user.email, (fetchedUsers) => {
+    const unsubscribe = fetchUsers(session.user.email, true, (fetchedUsers) => {
       setData(fetchedUsers);
       setLoading(false);
     });
@@ -86,8 +86,11 @@ export function DashboardContainer({
       });
     }
 
-    if (date) {
-      result = result.filter((u) => dayjs(u.createdAt).isSame(date, 'day'));
+    const [start, end] = dateRange;
+    if (start && end) {
+      result = result.filter((u) =>
+        dayjs(u.createdAt).isBetween(start, end, 'day', '[]'),
+      );
     }
 
     if (detectionStatus) {
@@ -99,7 +102,7 @@ export function DashboardContainer({
     }
 
     setFilteredData(result);
-  }, [data, search, date, detectionStatus, workStatus]);
+  }, [data, search, dateRange, detectionStatus, workStatus]);
 
   return (
     <>

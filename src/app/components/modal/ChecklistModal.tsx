@@ -1,9 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Modal, Spin } from 'antd';
+import { useEffect, useState, useRef } from 'react';
+import { Modal, Card, Badge, Spin, Button } from 'antd';
 import type { Answer, User } from '@/types';
-import { getFullName, checklistStatusLabels } from '@/utils';
+import {
+  checklistStatusLabels,
+  statusToBadgeStatus,
+  templatePDF,
+} from '@/utils';
 import {
   doc,
   onSnapshot,
@@ -13,6 +17,17 @@ import {
   getDocs,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase/firebase';
+import { Tabs, UserCard } from '@/components';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(pdfMake as any).vfs = (pdfFonts as any).vfs;
+
+enum TabType {
+  DRIVER = 'driver',
+  VEHICLE = 'vehicle',
+}
 
 export function ChecklistModal({
   record,
@@ -24,6 +39,8 @@ export function ChecklistModal({
   const [status, setStatus] = useState(record.checklistStatus);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentTab, setCurrentTab] = useState<TabType>(TabType.DRIVER);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const userRef = doc(db, 'users', record.uid);
@@ -33,7 +50,6 @@ export function ChecklistModal({
         setStatus(data.checklistStatus);
       }
     });
-
     return () => unsubscribe();
   }, [record.uid]);
 
@@ -58,54 +74,97 @@ export function ChecklistModal({
     if (record.uid) fetchAnswers();
   }, [record.uid]);
 
+  const handleExportPDF = () => {
+    const docData = templatePDF(record, answers);
+    pdfMake.createPdf(docData).download(record.workerId + '.pdf');
+  };
+
   return (
     <Modal
+      width="80%"
       open={true}
       onCancel={onClose}
       onOk={onClose}
+      okText="Хаах"
+      cancelText="Болих"
       title="Шалгах хуудасны явц"
+      footer={[
+        <Button key="export" onClick={handleExportPDF}>
+          PDF-р татах
+        </Button>,
+        <Button key="cancel" onClick={onClose}>
+          Болих
+        </Button>,
+        <Button key="ok" type="primary" onClick={onClose}>
+          Хаах
+        </Button>,
+      ]}
     >
-      <p>
-        <strong>Хэрэглэгч:</strong> {getFullName(record)}
-      </p>
+      <div ref={contentRef}>
+        <UserCard user={record}>
+          <Badge
+            status={statusToBadgeStatus[status?.driver ?? 'not_started']}
+            text={`Жолоочийн шалгалт: ${checklistStatusLabels[status?.driver ?? 'not_started']}`}
+          />
+          <Badge
+            status={statusToBadgeStatus[status?.vehicle ?? 'not_started']}
+            text={`Тээврийн хэрэгсэлийн шалгалт: ${checklistStatusLabels[status?.vehicle ?? 'not_started']}`}
+          />
+          <Badge
+            status={statusToBadgeStatus[status?.confirmed ?? 'not_started']}
+            text={`Шалгалтын баталгаажуулалт: ${checklistStatusLabels[status?.confirmed ?? 'not_started']}`}
+          />
+        </UserCard>
 
-      <p>
-        <strong>Жолоочийн шалгалт:</strong>{' '}
-        {checklistStatusLabels[status?.driver ?? 'not_started']}
-      </p>
-      <p>
-        <strong>Тээврийн хэрэгсэл:</strong>{' '}
-        {checklistStatusLabels[status?.vehicle ?? 'not_started']}
-      </p>
-      <p>
-        <strong>Баталгаажуулалт:</strong>{' '}
-        {checklistStatusLabels[status?.confirmed ?? 'not_started']}
-      </p>
+        <div style={{ marginTop: 16 }}>
+          <h4 style={{ fontWeight: 'bold' }}>Хариултууд:</h4>
+          <div className="w-[400px]">
+            <Tabs
+              currentTab={currentTab}
+              onChange={(key) => setCurrentTab(key as TabType)}
+              isFull
+              items={[
+                { key: TabType.DRIVER, label: 'Жолооч' },
+                { key: TabType.VEHICLE, label: 'Тээврийн хэрэгсэл' },
+              ]}
+            />
+          </div>
 
-      <div className="mt-4">
-        <h4 className="mb-2 font-bold">Хариултууд:</h4>
-        {loading ? (
-          <Spin />
-        ) : (
-          <ul className="space-y-2">
-            {answers.map((a, idx) => (
-              <li key={idx}>
-                <p>
-                  <strong>Асуулт:</strong> {a.question}
-                </p>
-                <p>
-                  <strong>Хариулт:</strong> {a.answer}{' '}
-                  {a.isCorrect === true
-                    ? '✅'
-                    : a.isCorrect === false
-                      ? '❌'
-                      : '❓'}
-                </p>
-              </li>
-            ))}
-            {answers.length === 0 && <p>Хариулт олдсонгүй.</p>}
-          </ul>
-        )}
+          {loading ? (
+            <Spin />
+          ) : answers.length === 0 ? (
+            <p>Хариулт олдсонгүй.</p>
+          ) : (
+            <div style={{ maxHeight: 200, overflowY: 'auto', marginTop: 16 }}>
+              {answers
+                .filter((a) =>
+                  currentTab === TabType.DRIVER
+                    ? a.vehiclePlate === null
+                    : a.vehiclePlate !== null,
+                )
+                .map((a, idx) => (
+                  <Card
+                    key={idx}
+                    type="inner"
+                    title={`Асуулт ${idx + 1}`}
+                    style={{ marginBottom: 12 }}
+                  >
+                    <p>
+                      <strong>Асуулт:</strong> {a.question}
+                    </p>
+                    <p>
+                      <strong>Хариулт:</strong> {a.answer}{' '}
+                      {a.isCorrect === true
+                        ? '✅'
+                        : a.isCorrect === false
+                          ? '❌'
+                          : a.isFix === true && '🛠️'}
+                    </p>
+                  </Card>
+                ))}
+            </div>
+          )}
+        </div>
       </div>
     </Modal>
   );

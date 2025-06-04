@@ -10,3 +10,4 @@ export * from './DatePicker';
 export * from './Select';
 export * from './Tag';
 export * from './Spin';
+export * from './UserCard';

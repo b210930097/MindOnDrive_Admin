@@ -1,5 +1,5 @@
 import type { Action, Subject } from '@/config/routes';
-import type { MenuDividerType } from 'antd/es/menu/hooks/useItems';
+import type { MenuDividerType } from 'antd/es/menu/interface';
 import type * as React from 'react';
 
 export interface NavSectionTitle {

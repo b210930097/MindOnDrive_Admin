@@ -24,6 +24,7 @@ export interface User {
   phone: string;
   signature: string | null;
   birthdate: string | null;
+  comfirmedDate: string | null;
   isTerms: boolean;
   companyId: string;
   companyName: string;

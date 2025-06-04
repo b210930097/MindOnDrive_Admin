@@ -11,11 +11,16 @@ import dayjs from 'dayjs';
 interface Props {
   reloadFlag?: boolean;
   search: string;
-  date: dayjs.Dayjs | null;
+  dateRange: [dayjs.Dayjs | null, dayjs.Dayjs | null];
   role: string;
 }
 
-export function RegisterContainer({ reloadFlag, search, date, role }: Props) {
+export function RegisterContainer({
+  reloadFlag,
+  search,
+  dateRange,
+  role,
+}: Props) {
   const { data: session } = useSession();
   const [data, setData] = useState<User[]>([]);
   const [filteredData, setFilteredData] = useState<User[]>([]);
@@ -25,10 +30,14 @@ export function RegisterContainer({ reloadFlag, search, date, role }: Props) {
     setLoading(true);
     if (!session?.user?.email) return;
 
-    const unsubscribe = fetchUsers(session.user.email, (fetchedUsers) => {
-      setData(fetchedUsers);
-      setLoading(false);
-    });
+    const unsubscribe = fetchUsers(
+      session.user.email,
+      false,
+      (fetchedUsers) => {
+        setData(fetchedUsers);
+        setLoading(false);
+      },
+    );
 
     return () => unsubscribe();
   }, [session?.user?.email]);
@@ -61,8 +70,11 @@ export function RegisterContainer({ reloadFlag, search, date, role }: Props) {
       });
     }
 
-    if (date) {
-      result = result.filter((u) => dayjs(u.createdAt).isSame(date, 'day'));
+    const [start, end] = dateRange;
+    if (start && end) {
+      result = result.filter((u) =>
+        dayjs(u.createdAt).isBetween(start, end, 'day', '[]'),
+      );
     }
 
     if (role) {
@@ -70,7 +82,7 @@ export function RegisterContainer({ reloadFlag, search, date, role }: Props) {
     }
 
     setFilteredData(result);
-  }, [data, search, date, role]);
+  }, [data, search, dateRange, role]);
 
   return (
     <Table

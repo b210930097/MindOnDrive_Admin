@@ -8,8 +8,8 @@ import type dayjs from 'dayjs';
 interface DashboardFilterProps {
   search: string;
   onSearchChange: (val: string) => void;
-  date: dayjs.Dayjs | null;
-  onDateChange: (date: dayjs.Dayjs | null) => void;
+  dateRange: [dayjs.Dayjs | null, dayjs.Dayjs | null];
+  onDateRangeChange: (range: [dayjs.Dayjs | null, dayjs.Dayjs | null]) => void;
   detectionStatus: DetectionStatus | '';
   onDetectionStatusChange: (status: DetectionStatus | '') => void;
   workStatus: WorkStatus | '';
@@ -19,8 +19,8 @@ interface DashboardFilterProps {
 export function DashboardFilter({
   search,
   onSearchChange,
-  date,
-  onDateChange,
+  dateRange,
+  onDateRangeChange,
   detectionStatus,
   onDetectionStatusChange,
   workStatus,
@@ -29,12 +29,12 @@ export function DashboardFilter({
   return (
     <div className="flex justify-between">
       <div className="flex gap-xl">
-        <div className="flex w-full flex-col gap-sm sm:w-[220px]">
+        <div className="flex w-full flex-col gap-sm sm:w-[280px]">
           <div className="text-text-sm font-medium">Огноо</div>
-          <DatePicker
-            value={date}
-            onChange={onDateChange}
-            placeholder="Огноо сонгох"
+          <DatePicker.RangePicker
+            value={dateRange}
+            onChange={(range) => onDateRangeChange(range || [null, null])}
+            placeholder={['Эхлэх огноо', 'Дуусах огноо']}
             className="w-full"
           />
         </div>
@@ -52,22 +52,6 @@ export function DashboardFilter({
 
       <div className="flex gap-xl">
         <div className="flex w-full flex-col gap-sm sm:w-[220px]">
-          <div className="text-text-sm font-medium">Ажлын явц</div>
-          <Select
-            allowClear={{ clearIcon: <XClose className="text-brand" /> }}
-            value={detectionStatus}
-            placeholder="Явц сонгох"
-            options={[
-              { label: 'Тодорхойгүй', value: 'Тодорхойгүй' },
-              { label: 'Зүүрмэглэсэн', value: 'Зүүрмэглэсэн' },
-              { label: 'Сатаарсан', value: 'Сатаарсан' },
-              { label: 'Сэрүүн', value: 'Сэрүүн' },
-            ]}
-            onChange={(e) => onDetectionStatusChange(e || '')}
-          />
-        </div>
-
-        <div className="flex w-full flex-col gap-sm sm:w-[220px]">
           <div className="text-text-sm font-medium">Ажлын статус</div>
           <Select
             allowClear={{ clearIcon: <XClose className="text-brand" /> }}
@@ -80,6 +64,21 @@ export function DashboardFilter({
               { label: 'Ажиллах боломжгүй', value: 'Ажиллах боломжгүй' },
             ]}
             onChange={(e) => onWorkStatusChange(e || '')}
+          />
+        </div>
+        <div className="flex w-full flex-col gap-sm sm:w-[220px]">
+          <div className="text-text-sm font-medium">Ажлын явц</div>
+          <Select
+            allowClear={{ clearIcon: <XClose className="text-brand" /> }}
+            value={detectionStatus}
+            placeholder="Явц сонгох"
+            options={[
+              { label: 'Тодорхойгүй', value: 'Тодорхойгүй' },
+              { label: 'Зүүрмэглэсэн', value: 'Зүүрмэглэсэн' },
+              { label: 'Сатаарсан', value: 'Сатаарсан' },
+              { label: 'Сэрүүн', value: 'Сэрүүн' },
+            ]}
+            onChange={(e) => onDetectionStatusChange(e || '')}
           />
         </div>
       </div>
