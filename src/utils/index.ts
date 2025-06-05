@@ -1,5 +1,7 @@
 import type { StepStatus } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
+import type { TDocumentDefinitions } from 'pdfmake/interfaces';
+import type { User, Answer } from '@/types';
 
 export * from './tailwindMerge';
 export * from './dayjs';
@@ -46,9 +48,6 @@ export const statusToBadgeStatus: Record<
   doing: 'processing',
   done: 'success',
 };
-
-import type { TDocumentDefinitions } from 'pdfmake/interfaces';
-import type { User, Answer } from '@/types';
 
 export function templatePDF(
   record: User,

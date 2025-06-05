@@ -79,6 +79,11 @@ export function ChecklistModal({
     pdfMake.createPdf(docData).download(record.workerId + '.pdf');
   };
 
+  const handlePrintPDF = () => {
+    const docData = templatePDF(record, answers);
+    pdfMake.createPdf(docData).print();
+  };
+
   return (
     <Modal
       width="80%"
@@ -86,16 +91,15 @@ export function ChecklistModal({
       onCancel={onClose}
       onOk={onClose}
       okText="Хаах"
-      cancelText="Болих"
       title="Шалгах хуудасны явц"
       footer={[
+        <Button key="print" onClick={handlePrintPDF}>
+          PDF-р хэвлэх
+        </Button>,
         <Button key="export" onClick={handleExportPDF}>
           PDF-р татах
         </Button>,
-        <Button key="cancel" onClick={onClose}>
-          Болих
-        </Button>,
-        <Button key="ok" type="primary" onClick={onClose}>
+        <Button key="ok" onClick={onClose}>
           Хаах
         </Button>,
       ]}
